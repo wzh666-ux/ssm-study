@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gxjzy.dao.PlUserinfoMapper"> <!--指定数据访问接口-->
+    <select id="loginAction" parameterType="String" resultType="com.gxjzy.domain.PlUserinfo">
+        select * from pl_userinfo where username=#{username}
+    </select>
+    <select id="selectByUsername" parameterType="String" resultType="com.gxjzy.domain.Menu">
+        SELECT
+            treemenu.id id,
+            treemenu.pid pid,
+            treemenu.NAME title,
+            treemenu.url href,
+            treemenu.icon
+        FROM
+            pl_userinfo,
+            role,
+            role_treemenu,
+            treemenu
+        WHERE
+            pl_userinfo.role = role.id
+            AND role.id = role_treemenu.rid
+            AND role_treemenu.tid = treemenu.id
+            AND pl_userinfo.username=#{username}
+    </select>
+    <insert id="save" parameterType="com.gxjzy.domain.PlUserinfo">
+        INSERT INTO `plant`.`pl_userinfo`(`username`, `password`) VALUES (#{username},#{password})
+    </insert>
+
+    <update id="forget" parameterType="com.gxjzy.domain.PlUserinfo" >
+        UPDATE `plant`.`pl_userinfo` SET `password` = #{password} WHERE `username` = #{username}
+    </update>
+
+
+
+
+    <!--  分开的++++++++++++++++++++++  -->
+    <select id="list" resultType="com.gxjzy.domain.PlUserinfo">
+        select * from pl_userinfo
+    </select>
+    <!--    查询总的条数-->
+    <select id="getListCount" parameterType="String" resultType="int">
+        select count(*) from pl_userinfo ${where}
+    </select>
+
+    <!--    分页和搜索结果的查询-->
+    <select id="getListView" resultType="com.gxjzy.domain.PlUserinfo">
+        select * from pl_userinfo ${param3} limit #{param1},#{param2}
+    </select>
+
+    <insert id="insert" parameterType="com.gxjzy.domain.PlUserinfo">
+        insert into pl_userinfo(username, password, usex, unitauth, isactive,addtime,modtime,remark,department,role)
+        values (#{username},#{password},#{usex},#{unitauth},#{isactive},#{addtime},#{modtime},#{remark},#{department},#{role})
+    </insert>
+
+    <update id="update" parameterType="com.gxjzy.domain.PlUserinfo">
+        update pl_userinfo set username=#{username},password=#{password},usex=#{usex},unitauth=#{unitauth},isactive=#{isactive},addtime=#{addtime},modtime=#{modtime},remark=#{remark},department=#{department},role=#{role}
+        where id=#{id}
+    </update>
+
+    <delete id="delete" parameterType="String">
+        delete from pl_userinfo where id=#{id}
+    </delete>
+
+    <delete id="deleteBatch" parameterType="java.util.List">
+        delete from pl_userinfo where id in
+        <foreach collection="plUserinfo" item="item" open="(" close=")" separator=",">
+            #{item.id}
+        </foreach>
+    </delete>
+
+
+    <!--  角色  -->
+    <select id="role" resultType="com.gxjzy.domain.Role">
+        select * from role
+    </select>
+</mapper>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gxjzy.dao.LogisticsGotosMapper"> <!--指定数据访问接口-->
+    <select id="list" resultType="com.gxjzy.domain.LogisticsGotos">
+        select * from pl_logistics_gotos
+    </select>
+    <!--    分页和搜索结果的查询-->
+    <select id="getListView" resultType="com.gxjzy.domain.LogisticsGotos">
+        select * from pl_logistics_gotos ${param3} limit #{param1},#{param2}
+    </select>
+    <!--    查询总的条数-->
+    <select id="getListCount" parameterType="String" resultType="int">
+        select count(*) from pl_logistics_gotos ${where}
+    </select>
+    <delete id="delete" parameterType="String">
+        delete from pl_logistics_gotos where id=#{id}
+    </delete>
+    <update id="update" parameterType="com.gxjzy.domain.LogisticsGotos">
+        update pl_logistics_gotos set name=#{name},carname=#{carname},peiname=#{peiname},peiphone=#{peiphone},time=#{time},remark=#{remark}
+        where id=#{id}
+    </update>
+    <insert id="save" parameterType="com.gxjzy.domain.LogisticsGotos">
+        insert into pl_logistics_gotos(name,carname,peiname,peiphone,time,remark)
+        values (#{name},#{carname},#{peiname},#{peiphone},#{time},#{remark})
+    </insert>
+    <delete id="deleteBatch" parameterType="java.util.List">
+        delete from pl_logistics_gotos where id in
+        <foreach collection="plLogisticsGotos" item="item" open="(" close=")" separator=",">
+            #{item.id}
+        </foreach>
+    </delete>
+</mapper>

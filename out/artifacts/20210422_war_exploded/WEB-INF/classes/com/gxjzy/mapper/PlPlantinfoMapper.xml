@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gxjzy.dao.PlPlantinfoMapper"> <!--指定数据访问接口-->
+    <select id="list" resultType="com.gxjzy.domain.PlPlantinfo">
+        select * from pl_Plantinfo
+    </select>
+<!--    分页和搜索结果的查询-->
+    <select id="getListView" resultType="com.gxjzy.domain.PlPlantinfo">
+        select * from (SELECT a.*,b.gsname FROM pl_plantinfo a left join pl_genus b on a.gsno=b.gsno) a ${param3} limit #{param1},#{param2}
+    </select>
+<!--    查询总的条数-->
+    <select id="getListCount" parameterType="String" resultType="int">
+        select count(*) from pl_Plantinfo ${where}
+    </select>
+    <delete id="delete" parameterType="String">
+        delete from pl_Plantinfo where id=#{id}
+    </delete>
+    <update id="update" parameterType="com.gxjzy.domain.PlPlantinfo">
+        update pl_Plantinfo set plantno=#{plantno}, plantname=#{plantname}, plantalias=#{plantalias}, latiname=#{latiname}, gsno=#{gsno}, morchar=#{morchar},
+        prodarea=#{prodarea}, ecolhabit=#{ecolhabit}, gardenuse=#{gardenuse}, imagepath=#{imagepath}, dimencode=#{dimencode}, modtime=#{modtime},
+        remark=#{remark}
+        where id=#{id}
+    </update>
+    <insert id="save" parameterType="com.gxjzy.domain.PlPlantinfo">
+        INSERT INTO `plant`.`pl_plantinfo`(`plantno`, `plantname`, `plantalias`, `latiname`, `gsno`, `morchar`,
+        `prodarea`, `ecolhabit`, `gardenuse`, `imagepath`, `dimencode`, `addtime`, `modtime`, `username`, `isstate`, `remark`)
+        VALUES (#{plantno}, #{plantname}, #{plantalias}, #{latiname}, #{gsno}, #{morchar},
+        #{prodarea}, #{ecolhabit}, #{gardenuse}, #{imagepath}, #{dimencode},#{addtime}, #{modtime}, #{username}, #{isstate}, #{remark})
+    </insert>
+    <delete id="deleteBatch" parameterType="java.util.List">
+        delete from pl_Plantinfo where id in
+        <foreach collection="plPlantinfos" item="item" open="(" close=")" separator=",">
+            #{item.id}
+        </foreach>
+    </delete>
+    <select id="detail" parameterType="String" resultType="com.gxjzy.domain.PlPlantinfo">
+        select * from pl_Plantinfo where id=#{id}
+    </select>
+    <update id="changeState">
+        update pl_Plantinfo set isstate=#{isstate} where id=#{id}
+    </update>
+</mapper>

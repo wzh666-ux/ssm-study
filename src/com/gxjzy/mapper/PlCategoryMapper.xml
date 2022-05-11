@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gxjzy.dao.PlCategoryMapper"> <!--指定数据访问接口-->
+    <select id="list" resultType="com.gxjzy.domain.PlCategory">
+        select * from pl_category
+    </select>
+<!--    分页和搜索结果的查询-->
+    <select id="getListView" resultType="com.gxjzy.domain.PlCategory">
+        select * from pl_category ${param3} limit #{param1},#{param2}
+    </select>
+<!--    查询总的条数-->
+    <select id="getListCount" parameterType="String" resultType="int">
+        select count(*) from pl_category ${where}
+    </select>
+    <delete id="delete" parameterType="String">
+        delete from pl_category where id=#{id}
+    </delete>
+    <update id="update" parameterType="com.gxjzy.domain.PlCategory">
+        update pl_category set cyno=#{cyno},cyname=#{cyname},remark=#{remark}
+        where id=#{id}
+    </update>
+    <insert id="save" parameterType="com.gxjzy.domain.PlCategory">
+        insert into pl_category(cyno, cyname, remark)
+        values (#{cyno},#{cyname},#{remark})
+    </insert>
+    <delete id="deleteBatch" parameterType="java.util.List">
+        delete from pl_category where id in
+        <foreach collection="plCategories" item="item" open="(" close=")" separator=",">
+            #{item.id}
+        </foreach>
+    </delete>
+</mapper>
